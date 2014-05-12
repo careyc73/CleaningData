@@ -14,7 +14,7 @@ loadDataSet <- function(type, desiredColumns) {
     
     dataSet <- dataSet[,desiredColumns,with=FALSE]
     
-    dataSet[,subject := data.table(read.table(paste("subject_", type, ".txt", sep="")))]
+#    dataSet[,subject := data.table(read.table(paste("subject_", type, ".txt", sep="")))]
     dataSet[,activity := data.table(read.table(paste("y_", type, ".txt", sep="")))]
 }
 
