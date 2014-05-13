@@ -37,12 +37,16 @@ desiredColumns <- getFeatureColumnsOfType(featuresTable, c("mean\\(", "std\\("))
 
 # Load the test data set and then add the train data set to it...
 combinedData <- loadDataSet("test", desiredColumns)
+#ToDo:  I should be doing this via a key join
 combinedData <- rbind(combinedData, loadDataSet("train", desiredColumns))
 
 # Set the column names in the data table to the column names indicated by the features
 # file, note the activity column which was added from the y_(test|train).txt file is left
 # unchanged.
-setnames(combinedData, 1:66, featuresTable[desiredColumns,][[2]])
+# The combined gsub calls are stripping the non-alphanumerical characters ("-()") from the column
+# names and capitalizing "mean" and "std" to make for more readable column names.
+setnames(combinedData, 1:66, 
+         gsub("std", "Std", gsub("mean", "Mean", gsub("[-(\\()]", "", featuresTable[desiredColumns,][[2]]))))
 
 # Take the numeric activity code in the activity column and replace it with the more
 # human-friendly textual code which the activity_labels file contains.
