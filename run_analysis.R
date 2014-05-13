@@ -14,7 +14,7 @@ loadDataSet <- function(type, desiredColumns) {
     
     dataSet <- dataSet[,desiredColumns,with=FALSE]
     
-#    dataSet[,subject := data.table(read.table(paste("subject_", type, ".txt", sep="")))]
+    dataSet[,subject := data.table(read.table(paste("subject_", type, ".txt", sep="")))]
     dataSet[,activity := data.table(read.table(paste("y_", type, ".txt", sep="")))]
 }
 
@@ -51,3 +51,8 @@ setnames(combinedData, 1:66,
 # Take the numeric activity code in the activity column and replace it with the more
 # human-friendly textual code which the activity_labels file contains.
 combinedData[,activity := getActivityText(activityTable,activity)]
+
+# ToDo
+# Just a first cut at extracting out the summary data, this gets me the mean of tBodyAccMeanX
+# but still need to figure out getting the mean of all columns.
+tidySummary <- combinedData[,mean(tBodyAccMeanX),by=list(activity,subject)]
