@@ -51,9 +51,9 @@ The script is laid out in two distinct sections.  The beginning of the script
 contains functions utilized by the main body of the script.  The following
 methods have been defined:
 
-	##Utility Functions
-	---------------------------------------------------------------------------
-	###getFeatureColumnsOfType: 
+##Utility Functions
+---------------------------------------------------------------------------
+	getFeatureColumnsOfType: 
 	This function takes a vector of column labels (strings) and a second vector
 	of strings.  It returns a logical vector indicating which labels matched
 	positive against any of the strings in the second vector.  I.e., this 
@@ -61,7 +61,7 @@ methods have been defined:
 	argument would quickly and easily alter the	behavior of the overall script
 	to summarize a different set of columns.
 	
-	###loadDataSet:
+	loadDataSet:
 	Given a parameter indicating the type of data to load (test or train) this
 	method will read the appropriate file into a data table (eg., X_train.txt).
 	The method additionally takes a vector of logicals indicating of the
@@ -72,13 +72,13 @@ methods have been defined:
 	attach the rows in those files to the returned data table.  This attaches
 	activity and subject information to the returned data table.
 	
-	###getActivityText:
+	getActivityText:
 	This simple method takes a table of activity labels and a numerical index.
 	It returns the textual activity represented by that row in the activity
 	labels table.
 	
-	##General script workflow
-	---------------------------------------------------------------------------
+##General script workflow
+---------------------------------------------------------------------------
 	The script performs a fairly straight forward sequence of operations.
 	
 	1) The column labels are read in from the features.txt file and stored in a
