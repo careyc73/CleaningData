@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-General
+# General
 -------------------------------------------------------------------------------
 The R script run_analysis.R transforms data describing the forces acting upon
 wearable devices into a more friendly format in the following ways:
