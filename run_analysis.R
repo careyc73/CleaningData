@@ -1,5 +1,6 @@
 #Load the data.table library, the data will be loaded in a data table
 library("data.table")
+library("reshape2")
 
 #---------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------
@@ -66,9 +67,9 @@ activityLabelsTable <- read.table("activity_labels.txt", stringsAsFactors=F)
 desiredColumns <- getFeatureColumnsOfType(columnLabelsTable, c("mean\\(", "std\\("))
 
 # Load the test data set
-testingAndTrainingDataTable <- loadDataSet("test", desiredColumns)
+combinedData <- loadDataSet("test", desiredColumns)
 # Load the train data set as well and append it to the data table.
-testingAndTrainingDataTable <- rbind(testingAndTrainingDataTable, loadDataSet("train", desiredColumns))
+combinedData <- rbind(combinedData, loadDataSet("train", desiredColumns))
 
 # Set the column names in the data table to the column names indicated by the features
 # file, the activity and subject columns which were added from the y_(test|train).txt file are left
@@ -78,14 +79,20 @@ testingAndTrainingDataTable <- rbind(testingAndTrainingDataTable, loadDataSet("t
 # I PREFER TO LEAVE MOST OF THE ORIGINAL CAPITALIZATION IN PLACE.  Capitalization makes varibles that 
 # have a compound name read more naturally.
 readableNames <- gsub("std", "Std", gsub("mean", "Mean", gsub("[-(\\()]", "", columnLabelsTable[desiredColumns,][[2]])))
-setnames(testingAndTrainingDataTable, 1:66, readableNames)
+setnames(combinedData, 1:66, readableNames)
 
 # Take the numeric activity code in the activity column and replace it with the more
 # human-friendly textual code which the activity_labels file contains.
-testingAndTrainingDataTable[,activity := getActivityText(activityLabelsTable,activity)]
+combinedData[,activity := getActivityText(activityLabelsTable,activity)]
+
+# Break the data down using melt into {identifier, label, value} tuples
+moltenData <- melt(combinedData, id.vars=c("subject", "activity"))
+
+# Now use reshape2 dcast to calculate aggregate values on the broken down data.
+tidyData <- dcast(moltenData, subject + activity ~ variable, fun.aggregate=mean)
 
 # Build a factor that groups all rows by the combination of (subject & activity)
-factorToSplitData <- list(factor(testingAndTrainingDataTable$activity), factor(testingAndTrainingDataTable$subject))
+#factorToSplitData <- list(factor(combinedData$activity), factor(combinedData$subject))
     
 # Calculate the mean for each {subject, activity} pair and assign the result to "meansInTidyForm".
-meansInTidyForm <- getFactoredAccumulation(factorToSplitData, testingAndTrainingDataTable, mean)
+#meansInTidyForm <- getFactoredAccumulation(factorToSplitData, combinedData, mean)
