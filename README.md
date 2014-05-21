@@ -53,7 +53,7 @@ to include "meanFreq()"
 
 This choice was arbitrary and driven by the ambiguity of whether or not "mean"
 should be included as a column.  The design of the 'GetFeatureColumnsOfType'
-method was driven precisely by a desire to make it easy to change the choice
+method was chosen precisely by a desire to make it easy to change the choice
 of variables for inclusion should the user desire it.
 
 -------------------------------------------------------------------------------

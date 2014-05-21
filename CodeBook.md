@@ -30,7 +30,7 @@ These signals were used to estimate variables of the feature vector for each
 pattern: '-XYZ' is used to denote 3-axial signals in the X, Y and Z 
 directions.
 
-## Notes regarding transformations of data from the original data set
+## Transformations of data from the original set
 The data used in this script are a subset of the data from the raw sets,
 specifically the variables of type "mean" and "std" have been retained and the
 rest discarded.
@@ -43,21 +43,21 @@ save the following two.
 
 	Subject - This variable records the individual wearing the devices when
 	recordings were performed.  The variable is an integral value between 1 and
-	30 preserving the anonymity of the test individual.
+	30 (preserving the anonymity of the test individual.)
 	
-	Activity - Originally a numerical code from 1 to 6 the variable in the
+	Activity - Originally a numerical code from 1 to 6, the variable in the
 	data set produced by run_analysis has been transformed into the readable
 	text indicated by the activity_labels file in the original data set.
 	
-# Transformation of original data
+# Data returned by the script
 The data table returned by run_analysis contains, as noted, only a subset of
 the variables in the original data set.
 
 Additionally the values returned are an aggregate of the original values.
 
 Specifically the observations from the original data set constitute individual
-samples of a given variable for a given {subject, activity} pair.  The rows
-in the data set returned by run_analysis are the mean of all samples for each
+readings of each variable for {subject, activity} pairs.  The rows in the data 
+set returned by run_analysis are the mean of all samples for each
 {subject, activity} pair.
 
 For instance in the original data set there may be 8 samples of all the
