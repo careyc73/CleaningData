@@ -26,12 +26,12 @@ getFeatureColumnsOfType <- function (columnLabelsTable, disjunctiveFilters) {
 # indicated by the desiredColumns vector.  Additionally the activity and subject for a given
 # row will be bound into the table from the subject_ and y_ files.
 loadDataSet <- function(type, desiredColumns) {
-    dataSet <- data.table(read.table(paste("X_", type, ".txt", sep="")))
+    dataSet <- data.table(read.table(paste(type, "\\X_", type, ".txt", sep="")))
     
     dataSet <- dataSet[,desiredColumns,with=FALSE]
     
-    dataSet[,subject := data.table(read.table(paste("subject_", type, ".txt", sep="")))]
-    dataSet[,activity := data.table(read.table(paste("y_", type, ".txt", sep="")))]
+    dataSet[,subject := data.table(read.table(paste(type, "\\subject_", type, ".txt", sep="")))]
+    dataSet[,activity := data.table(read.table(paste(type,"\\y_", type, ".txt", sep="")))]
 }
 
 # Shortcut function to retrieve the textual activity associated with a numerical activity
@@ -91,8 +91,4 @@ moltenData <- melt(combinedData, id.vars=c("subject", "activity"))
 # Now use reshape2 dcast to calculate aggregate values on the broken down data.
 tidyData <- dcast(moltenData, subject + activity ~ variable, fun.aggregate=mean)
 
-# Build a factor that groups all rows by the combination of (subject & activity)
-#factorToSplitData <- list(factor(combinedData$activity), factor(combinedData$subject))
-    
-# Calculate the mean for each {subject, activity} pair and assign the result to "meansInTidyForm".
-#meansInTidyForm <- getFactoredAccumulation(factorToSplitData, combinedData, mean)
+tidyData
