@@ -12,7 +12,7 @@ wearable devices into a more friendly format in the following ways:
 	4) Many of the original variables have been removed.  Though the script
 	   hard codes which columns remain (more under assumptions) the removal
        is performed by a parametized function such that selection of
-       different functions would be straightforward.
+       different variables would be straightforward.
     5) Finally the script outputs a data set (in the form of a data table)
 	   containing the mean value for each variable grouped by activity and
 	   test subject.  Ie., the mean value for each sample of "Walking" taken
@@ -44,6 +44,18 @@ A subset of the original data is processed by the script.  Variables containing
 the text 'mean()' and 'std()' have been retained, the rest have been removed.
 Note this does mean that variables named 'meanFreq()' have been removed.
 
+Should "meanFreq()" (for instance) be desired for inclusion the user only has to 
+alter the line:
+
+desiredColumns <- GetFeatureColumnsOfType(columnLabelsTable, c("mean\\(", "std\\("))
+
+to include "meanFreq()"
+
+This choice was arbitrary and driven by the ambiguity of whether or not "mean"
+should be included as a column.  The design of the 'GetFeatureColumnsOfType'
+method was driven precisely by a desire to make it easy to change the choice
+of variables for inclusion should the user desire it.
+
 -------------------------------------------------------------------------------
 # Script Operation and Layout
 -------------------------------------------------------------------------------
@@ -53,7 +65,7 @@ methods have been defined:
 
 ##Utility Functions
 ---------------------------------------------------------------------------
-	getFeatureColumnsOfType: 
+	GetFeatureColumnsOfType: 
 	This function takes a vector of column labels (strings) and a second vector
 	of strings.  It returns a logical vector indicating which labels matched
 	positive against any of the strings in the second vector.  I.e., this 
@@ -61,18 +73,18 @@ methods have been defined:
 	argument would quickly and easily alter the	behavior of the overall script
 	to summarize a different set of columns.
 	
-	loadDataSet:
+	LoadDataSet:
 	Given a parameter indicating the type of data to load (test or train) this
 	method will read the appropriate file into a data table (eg., X_train.txt).
 	The method additionally takes a vector of logicals indicating of the
 	columns read in whether or not they should be a part of the returned data
 	table.  The assumption is that the logical returned by 
-	getFeatureColumnsOfType will be passed along as the argument.  Finally this
+	GetFeatureColumnsOfType will be passed along as the argument.  Finally this
 	function will read in the subject_(train|test) and y_(train|test) files and
 	attach the rows in those files to the returned data table.  This attaches
 	activity and subject information to the returned data table.
 	
-	getActivityText:
+	GetActivityText:
 	This simple method takes a table of activity labels and a numerical index.
 	It returns the textual activity represented by that row in the activity
 	labels table.
@@ -86,10 +98,10 @@ methods have been defined:
 	2) The activity labels are read in from the activity_labels.txt file and
 	stored in a data table.
 	3) The logical vector indicating the columns the script wishes to process is
-	determined using getFeatureColumnsOfType.  "mean()" and "std()" are passed
+	determined using GetFeatureColumnsOfType.  "mean()" and "std()" are passed
 	in as the textual filters to match against.
-	4) The test data is read in using loadDataSet, the train data set is then
-	read in using loadDataSet as well.  "rbind" pastes the two data tables
+	4) The test data is read in using LoadDataSet, the train data set is then
+	read in using LoadDataSet as well.  "rbind" pastes the two data tables
 	together.
 	5) A series of gsub commands takes the column labels read in at step 1 and
 	transforms them for improved read ability.  
@@ -100,6 +112,9 @@ methods have been defined:
 		Example:  'tBodyAcc-mean()-X' will be transformed into 'tBodyAccMeanX'
 		This format preserves the textual "layout" of the variable without some
 		of the unnecessary visual clutter.
+		- Note:  Usage of capital letters to split words rather than periods is
+		the author's personal preference as it matches better the conventions
+		in a number of popularly used languages.
 	6) The column names in the combined data set returned at step 4 are set to
 	the names produced by step 5.
 	7) The data table ':=' functionality is used to quickly transform the

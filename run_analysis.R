@@ -11,7 +11,7 @@ library("reshape2")
 # Takes a list of strings and a vector of text patterns.  Iterate through the text patterns
 # and identifies which strings in the list contain any of the text patterns as a substring.
 # Returns a logical vector identifying the matching strings.
-getFeatureColumnsOfType <- function (columnLabelsTable, disjunctiveFilters) {
+GetFeatureColumnsOfType <- function (columnLabelsTable, disjunctiveFilters) {
     logicalFilterVector <- vector(mode="logical", length=nrow(columnLabelsTable))
     for (filter in disjunctiveFilters) {
         logicalFilterVector <- grepl(filter, columnLabelsTable[[2]]) | logicalFilterVector
@@ -25,7 +25,7 @@ getFeatureColumnsOfType <- function (columnLabelsTable, disjunctiveFilters) {
 # the file the type resolves to.  The table will be pared to include only the columns
 # indicated by the desiredColumns vector.  Additionally the activity and subject for a given
 # row will be bound into the table from the subject_ and y_ files.
-loadDataSet <- function(type, desiredColumns) {
+LoadDataSet <- function(type, desiredColumns) {
     dataSet <- data.table(read.table(paste(type, "\\X_", type, ".txt", sep="")))
     
     dataSet <- dataSet[,desiredColumns,with=FALSE]
@@ -36,7 +36,7 @@ loadDataSet <- function(type, desiredColumns) {
 
 # Shortcut function to retrieve the textual activity associated with a numerical activity
 # code passed in.
-getActivityText <- function(activityLabelsTable, numericActivity) {
+GetActivityText <- function(activityLabelsTable, numericActivity) {
     activityLabelsTable[numericActivity,2]
 }
 
@@ -64,12 +64,12 @@ activityLabelsTable <- read.table("activity_labels.txt", stringsAsFactors=F)
 # Assumption:  mean is ONLY mean, not meanFreq.  Use the column labels to determine
 # which columns we care about -- specifically mean and std in this implementation but note
 # that the getFetaureColumnsOfType will accept any set of patterns and logically 'or' them.
-desiredColumns <- getFeatureColumnsOfType(columnLabelsTable, c("mean\\(", "std\\("))
+desiredColumns <- GetFeatureColumnsOfType(columnLabelsTable, c("mean\\(", "std\\("))
 
 # Load the test data set
-combinedData <- loadDataSet("test", desiredColumns)
+combinedData <- LoadDataSet("test", desiredColumns)
 # Load the train data set as well and append it to the data table.
-combinedData <- rbind(combinedData, loadDataSet("train", desiredColumns))
+combinedData <- rbind(combinedData, LoadDataSet("train", desiredColumns))
 
 # Set the column names in the data table to the column names indicated by the features
 # file, the activity and subject columns which were added from the y_(test|train).txt file are left
@@ -83,7 +83,7 @@ setnames(combinedData, 1:66, readableNames)
 
 # Take the numeric activity code in the activity column and replace it with the more
 # human-friendly textual code which the activity_labels file contains.
-combinedData[,activity := getActivityText(activityLabelsTable,activity)]
+combinedData[,activity := GetActivityText(activityLabelsTable,activity)]
 
 # Break the data down using melt into {identifier, label, value} tuples
 moltenData <- melt(combinedData, id.vars=c("subject", "activity"))
